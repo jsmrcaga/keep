@@ -1,0 +1,31 @@
+{
+  "name": "@jsmrcaga/keep",
+  "version": "0.0.0",
+  "description": "A simple password manager ",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsmrcaga/keep.git"
+  },
+  "keywords": [
+    "password",
+    "manager",
+    "keep",
+    "safe"
+  ],
+  "author": "Jo Colina <jo@jocolina.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsmrcaga/keep/issues"
+  },
+  "homepage": "https://github.com/jsmrcaga/keep#readme",
+  "dependencies": {
+    "@jsmrcaga/mongo": "^0.1.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
