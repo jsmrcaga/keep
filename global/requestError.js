@@ -9,9 +9,8 @@ class RequestError extends Error {
 
 module.exports = RequestError;
 
-baton:
-- 15 crema
-- 15 negros
-- 8  blancos
-- Fritos palitos: 5
-- 
+// baton:
+// - 15 crema
+// - 15 negros
+// - 8  blancos
+// - Fritos palitos: 5

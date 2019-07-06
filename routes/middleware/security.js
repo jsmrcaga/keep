@@ -6,11 +6,17 @@ module.exports = (req, res, next) => {
 		return next();
 	}
 
-	if(!req.get('X-Keep-Token')) {
+	if(!req.get('Authorization')) {
 		return res.status(403).json({error: 'credentials are required'});
 	}
 
-	const token = req.get('X-Keep-Token');
+	let token = req.get('Authorization');
+
+	if(!token.startsWith('Bearer ')) {
+		return res.status(400).json({error: 'Unknown authorization type'});
+	}
+
+	token = token.replace('Bearer ', '');
 
 	User.get({
 		'tokens.token': token
@@ -22,7 +28,7 @@ module.exports = (req, res, next) => {
 		let token_valid = user.token(token);
 
 		if(!token_valid) {
-			return res.status(403).json({error: 'Invalid credentials'});
+			return res.status(403).json({error: 'Outdated credentials'});
 		}
 
 		req.user = user;

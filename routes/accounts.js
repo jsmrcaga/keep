@@ -1,5 +1,6 @@
 const express = require('express');
 const accounts = express.Router();
+const RequestError = require('../global/requestError');
 
 const User = require('../models/user');
 
@@ -23,10 +24,11 @@ accounts.post('/new', (req, res, next) => {
 	});
 
 	user.save().then(() => {
-		return res.json(user);
+		return res.json(user.toAPI());
 	}).catch(e => {
 		console.error('[USER][New]', e);
-		return res.status(500).json({error: 'An unexpected error occurred'});
+		let error = new RequestError(null, 500, e);
+		return next(error);
 	});
 });
 
@@ -39,7 +41,8 @@ accounts.post('/login', (req, res, next) => {
 		return res.json({ token });
 	}).catch(e => {
 		console.error('[USER][Login]', e);
-		return res.status(500).json({error: 'An unexpected error occurred'});
+		let error = new RequestError(null, 500, e);
+		return next(error);
 	});
 });
 
