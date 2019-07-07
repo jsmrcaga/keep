@@ -137,7 +137,7 @@ credentials.get('/:slug', (req, res, next) => {
 			return res.status(404).json({error: `No credentials with name/url ${req.params.slug}`});
 		}
 
-		decrypt_credentials(credentials);
+		decrypt_credentials(req, credentials);
 		return res.json(credentials.toAPI());
 	}).catch(e => {
 		console.error('[Credentials][Single]', e);
