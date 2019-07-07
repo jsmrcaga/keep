@@ -24,7 +24,7 @@ const characters = {
 };
 
 class Credentials extends CredentialsModel {
-	constructor({ user, type, keys=null, password=null, name, tags=[], url, logo=null, encrypted=null }) {
+	constructor({ user, type, keys=null, password=null, name, tags=[], url, logo=null, encrypted=null, slug='' }) {
 		super();
 
 		if(!Credentials.types.includes(type)) {
@@ -83,15 +83,16 @@ class Credentials extends CredentialsModel {
 	}
 
 	toAPI() {
-		const { type, keys, password, name, tags, url, encrypted } = this;
+		const { type, keys, password, name, tags, url, encrypted, slug } = this;
 		return {
 			type,
 			keys,
 			password,
 			name,
+			slug,
 			tags,
 			url,
-			encrypted: Boolean(encrypted)
+			encrypted
 		};
 	}
 

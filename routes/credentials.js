@@ -97,17 +97,19 @@ credentials.get('/tags', (req, res, next) => {
 /**
  * Get credentials for a single item
  */
-credentials.get('/:name', (req, res, next) => {
+credentials.get('/:slug', (req, res, next) => {
 	Credentials.get({
 		user: req.user.id,
 		$or: [{
-			name: req.params.name,
+			slug: req.params.slug
 		}, {
-			url: decodeURIComponent(req.params.name)
+			url: decodeURIComponent(req.params.slug)
+		}, {
+			name: req.params.slug,
 		}]
 	}).then(([credentials]) => {
 		if(!credentials) {
-			return res.status(404).json({error: `No credentials with name/url ${req.params.name}`});
+			return res.status(404).json({error: `No credentials with name/url ${req.params.slug}`});
 		}
 
 		if(req.body.decrypt || req.user.key) {

@@ -8,7 +8,7 @@ Utils.UUID = () => {
 };
 
 Utils.slugify = (string) => {
-	return string.replace(/\s/, '_').toLowerCase();
+	return string.replace(/\s/g, '_').toLowerCase();
 };
 
 module.exports = Utils;
