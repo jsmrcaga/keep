@@ -4,7 +4,7 @@
   "description": "A simple password manager ",
   "main": "keep.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha ./test --exit --recursive"
   },
   "bin": {
     "keep": "./cli.js"
@@ -31,5 +31,10 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2"
   }
 }

@@ -24,7 +24,7 @@ const characters = {
 };
 
 class Credentials extends CredentialsModel {
-	constructor({ user, type, keys=null, password=null, name, tags=[], url, logo=null, encrypted=null, slug='' }) {
+	constructor({ user, type='password', keys=null, password=null, name='', tags=[], url, logo=null, encrypted=null, slug='' }) {
 		super();
 
 		if(!Credentials.types.includes(type)) {
@@ -73,6 +73,7 @@ class Credentials extends CredentialsModel {
 
 		let [ iv, encrypted ] = this.encrypted.split(':');
 		iv = Buffer.from(iv, 'base64');
+		encrypted = Buffer.from(encrypted, 'base64');
 		let decipher = Crypto.createDecipheriv('AES-256-CBC', Buffer.from(key), iv);
 		
 		let decrypted = decipher.update(encrypted);

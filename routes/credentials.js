@@ -5,6 +5,28 @@ const RequestError = require('../global/requestError');
 
 const Credentials = require('../models/credentials');
 
+const decrypt_credentials = (req, credentials) => {
+	if(!credentials.encrypted) {
+		return;
+	}
+
+	if(req.query.decrypt || req.user.key) {
+		try {
+			let decrypted = JSON.parse(credentials.decrypt(req.body.decrypt || req.query.decrypt || req.user.key));
+			if(credentials.type === 'password') {
+				credentials.password = decrypted;
+			} else {
+				credentials.keys = decrypted;
+			}
+
+			// Do not send both at the same time
+			credentials.encrypted = null;
+		} catch(e) {
+			console.error(e);
+		}
+	}
+}
+
 /**
  * Get all credentials
  */
@@ -12,11 +34,14 @@ credentials.get('/', (req, res, next) => {
 	Credentials.get({
 		user: req.user.id
 	}).then(credentials => {
+		credentials.forEach(credential => {
+			decrypt_credentials(req, credential);
+		});
 		return res.json(credentials.map(c => c.toAPI()));
 	}).catch(e => {
 		// request error
 		console.error('[Credentials][All]', e);
-		let error = new RequestError(e.message, 500, error);
+		let error = new RequestError(e.message, 500, e);
 		return next(e);
 	});
 });
@@ -112,10 +137,7 @@ credentials.get('/:slug', (req, res, next) => {
 			return res.status(404).json({error: `No credentials with name/url ${req.params.slug}`});
 		}
 
-		if(req.body.decrypt || req.user.key) {
-			credentials.decrypt(req.body.decrypt || req.user.key);
-		}
-
+		decrypt_credentials(credentials);
 		return res.json(credentials.toAPI());
 	}).catch(e => {
 		console.error('[Credentials][Single]', e);
