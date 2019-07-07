@@ -18,13 +18,11 @@ const handles = require('./cli/handles');
 const [script, ...args] = variables;
 
 if(!script) {
-	let err = new Error(`[KEEP] Script is mandatory`);
-	return console.error(err);
+	return console.error(`[KEEP] Script is mandatory`);
 }
 
 if(!handles[script]) {
-	let err = new Error(`[KEEP] Unknown script ${script}`);
-	return console.error(err);
+	return console.error(`[KEEP] Unknown script ${script}`);
 }
 
 return handles[script](args, options);

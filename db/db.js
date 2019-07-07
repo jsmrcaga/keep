@@ -1,4 +1,4 @@
-const Config = require('../global/config');
+const Config = require('../global/config')();
 const { Database } = require('@jsmrcaga/mongo');
 
 const database = new Database('main', {
