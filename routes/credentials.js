@@ -10,9 +10,9 @@ const decrypt_credentials = (req, credentials) => {
 		return;
 	}
 
-	if(req.query.decrypt || req.user.key) {
+	if(req.query.decrypt) {
 		try {
-			let decrypted = JSON.parse(credentials.decrypt(req.body.decrypt || req.query.decrypt || req.user.key));
+			let decrypted = JSON.parse(credentials.decrypt(req.body.decrypt || req.query.decrypt));
 			if(credentials.type === 'password') {
 				credentials.password = decrypted;
 			} else {
@@ -52,8 +52,8 @@ credentials.get('/', (req, res, next) => {
 credentials.post('/new', (req, res, next) => {
 	const { keys, password, name, url } = req.body;
 
-	if(!name || !url || (!keys && !password)) {
-		return res.status(400).json({error: 'name, url and keys or password are mandatory'});
+	if(!name || !url || (!keys && !password && !encrypted)) {
+		return res.status(400).json({error: 'name, url and keys or password or encyrpted value are mandatory'});
 	}
 
 	Credentials.get({
@@ -68,9 +68,9 @@ credentials.post('/new', (req, res, next) => {
 
 		let credential = new Credentials({
 			user: req.user.id,
-			type: req.body.type || 'password',
-			keys: req.body.keys || null,
-			password: req.body.password || null,
+			type: req.body.type || (req.body.password ? 'password' : 'keys'),
+			keys: req.body.encrypted ? null: (req.body.keys || null),
+			password: req.body.encrypted ? null: (req.body.password || null),
 			name: req.body.name,
 			tags: req.body.tags || [],
 			url: req.body.url,
@@ -78,8 +78,8 @@ credentials.post('/new', (req, res, next) => {
 		});
 
 		// Encrypted not sent, and one key present
-		if(!req.body.encrypted && (req.body.encrypt || req.user.key)) {
-			credential.encrypt(req.body.encrypt || req.user.key);
+		if(!req.body.encrypted && req.body.encrypt) {
+			credential.encrypt(req.body.encrypt);
 		}
 
 		return credential.save();
@@ -119,10 +119,8 @@ credentials.get('/tags', (req, res, next) => {
 	});
 });
 
-/**
- * Get credentials for a single item
- */
-credentials.get('/:slug', (req, res, next) => {
+
+credentials.use('/:slug', (req, res, next) => {
 	Credentials.get({
 		user: req.user.id,
 		$or: [{
@@ -137,13 +135,35 @@ credentials.get('/:slug', (req, res, next) => {
 			return res.status(404).json({error: `No credentials with name/url ${req.params.slug}`});
 		}
 
-		decrypt_credentials(req, credentials);
-		return res.json(credentials.toAPI());
+		req.credentials = credentials;
+		return next();
 	}).catch(e => {
 		console.error('[Credentials][Single]', e);
 		let error = new RequestError(e.message, 500, error);
 		return next(error);
 	});
+});
+
+
+/**
+ * Get credentials for a single item
+ */
+credentials.get('/:slug', (req, res, next) => {
+	decrypt_credentials(req, req.credentials);
+	return res.json(credentials.toAPI());
+});
+
+/**
+ * Delete a credential
+ */
+credentials.delete('/:slug', (req, res, next) => {
+	req.credentials.delete().then(() => {
+		return res.status(204).end();
+	}).catch(e => {
+		console.error('[Credentials][DELETE][Single]', e);
+		let error = new RequestError(e.message, 500, error);
+		return next(error);
+	})
 });
 
 module.exports = credentials;

@@ -23,7 +23,7 @@ You can also use it via its API:
 ```js
 const keep = require('@jsmrcaga/keep');
 
-keep.start(config).then(() => {
+keep.start({ port: 1234 }, configFile).then(() => {
 	// do something
 }).catch(e => {
 	// handle the error
@@ -54,6 +54,7 @@ Example:
 
 ## CLI
 * Start:
-`keep start --config ./config.json`
+`keep start [--config ./config.json] [--port 1234]`
+> Note that if no config is specified, `./config.json` will be used as a default
 
 

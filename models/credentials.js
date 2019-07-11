@@ -118,6 +118,6 @@ class Credentials extends CredentialsModel {
 	}
 }
 
-Credentials.types = ['password', 'ssh', 'keypair'];
+Credentials.types = ['password', 'keys'];
 
 module.exports = Credentials;
