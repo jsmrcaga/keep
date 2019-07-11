@@ -1,8 +1,9 @@
-const { server } = require('./server');
-
 const start = ({ port }, config) => {
 	// Initialize config
-	require('./global/config')(config);
+	const init_config = require('./global/config');
+	init_config(config);
+
+	const { server } = require('./server');
 	const Database = require('./db/db');
 
 	port = port || process.env.KEEP_PORT || 7654;

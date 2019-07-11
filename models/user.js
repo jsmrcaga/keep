@@ -14,21 +14,14 @@ class User extends UserModel {
 	}
 
 	token(token=null) {
+		// clear tokens
+		this.tokens = this.tokens.filter(({ token, expires }) => expires > Date.now());
+		this.save();
+
 		if(token) {
 			// verify token
 			let exists = this.tokens.findIndex((tok) => tok.token === token);
-			if(exists === -1) {
-				return false;
-			}
-
-			let expires = this.tokens[exists].expires;
-			if(expires <= Date.now()) {
-				this.tokens.splice(exists, 1);
-				this.save();
-				return false;
-			}
-
-			return true;
+			return exists > -1;
 		}
 
 		// Create token
