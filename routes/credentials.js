@@ -50,7 +50,7 @@ credentials.get('/', (req, res, next) => {
  * Create new credential
  */
 credentials.post('/new', (req, res, next) => {
-	const { keys, password, name, url } = req.body;
+	const { keys, password, name, url, encrypted } = req.body;
 
 	if(!name || !url || (!keys && !password && !encrypted)) {
 		return res.status(400).json({error: 'name, url and keys or password or encyrpted value are mandatory'});
@@ -69,12 +69,12 @@ credentials.post('/new', (req, res, next) => {
 		let credential = new Credentials({
 			user: req.user.id,
 			type: req.body.type || (req.body.password ? 'password' : 'keys'),
-			keys: req.body.encrypted ? null: (req.body.keys || null),
-			password: req.body.encrypted ? null: (req.body.password || null),
+			keys: encrypted ? null : (keys || null),
+			password: encrypted ? null : (password || null),
 			name: req.body.name,
 			tags: req.body.tags || [],
-			url: req.body.url,
-			encrypted: req.body.encrypted
+			encrypted: encrypted || null,
+			url
 		});
 
 		// Encrypted not sent, and one key present
