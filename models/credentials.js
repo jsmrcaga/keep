@@ -53,6 +53,11 @@ class Credentials extends CredentialsModel {
 		this.encrypted = encrypted;
 	}
 
+	clear() {
+		this.keys = null;
+		this.password = null;
+	}
+
 	encrypt(key) {
 		// AES needs 16
 		let iv = Crypto.randomBytes(16);

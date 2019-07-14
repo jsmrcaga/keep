@@ -157,13 +157,37 @@ credentials.get('/:slug', (req, res, next) => {
  * Delete a credential
  */
 credentials.delete('/:slug', (req, res, next) => {
+	// Hard Delete
 	req.credentials.delete().then(() => {
 		return res.status(204).end();
 	}).catch(e => {
-		console.error('[Credentials][DELETE][Single]', e);
+		console.error('[Credentials][DELETE]', e);
 		let error = new RequestError(e.message, 500, error);
 		return next(error);
-	})
+	});
+});
+
+/**
+ * Modify a credential
+ */
+credentials.put('/:slug', (req, res, next) => {
+	for(let k in req.body) {
+		if(k in req.credentials && req.body[k]) {
+			req.credentials[k] = req.body[k];
+		}
+	}
+
+	if(req.body.encrypted) {
+		req.credentials.clear();
+	}
+
+	req.credentials.save().then(() => {
+		return res.json(req.credentials.toAPI());
+	}).catch(e => {
+		console.error('[Credentials][PUT]', e);
+		let error = new RequestError(e.message, 500, error);
+		return next(error);
+	});
 });
 
 module.exports = credentials;

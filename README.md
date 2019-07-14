@@ -6,9 +6,10 @@ A simple credential management solution.
 
 ## Roadmap
 * [X] Simple user and credential management
-* [ ] Credential encrypting server-side (with 2nd encrypting password/certif)
-* [ ] Front end
-* [ ] Front end only encryption
+* [X] Credential encrypting server-side (with 2nd encrypting password/certif)
+* [X] Front end
+* [X] Front end only encryption
+* [ ] OTP Management
 * [ ] Web authentication (fingerprint)
 
 ## Installation
@@ -18,6 +19,13 @@ A simple credential management solution.
 
 You should now have access to the CLI.
 
+## CLI
+* Start:
+`keep start [--config ./config.json] [--port 1234]`
+
+> Note that if no config is specified, `./config.json` will be used as a default
+
+## API
 You can also use it via its API:
 
 ```js
@@ -51,10 +59,5 @@ Example:
 	}
 }
 ```
-
-## CLI
-* Start:
-`keep start [--config ./config.json] [--port 1234]`
-> Note that if no config is specified, `./config.json` will be used as a default
 
 
