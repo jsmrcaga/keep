@@ -7,8 +7,8 @@ const database = new Database('main', {
 	endpoint: Config.db.endpoint || 'localhost',
 	port: Config.db.port || 46037,
 	database: 'keep',
-	reconnectTries: 10,
-	reconnectInterval: 100
+	reconnectTries: 1000,
+	reconnectInterval: 1000
 });
 
 module.exports = database;

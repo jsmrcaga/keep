@@ -5,12 +5,11 @@ const Database = require('../db/db');
 const UserModel = Database.model('User');
 
 class User extends UserModel {
-	constructor({ username, password, tokens=[], key=null }) {
+	constructor({ username, password, tokens=[] }) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.tokens = tokens;
-		this.key = null;
 	}
 
 	token(token=null) {
